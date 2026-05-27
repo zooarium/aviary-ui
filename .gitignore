@@ -5,6 +5,8 @@ npm-debug.log*
 node_modules
 packages/*/node_modules
 packages/*/dist
+apps/*/node_modules
+apps/*/dist
 *.local
 
 .npm-cache
