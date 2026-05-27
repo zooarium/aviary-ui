@@ -11,6 +11,7 @@ export default defineConfig({
       fileName: 'index',
       formats: ['es'],
     },
+    sourcemap: true,
     rollupOptions: {
       // Everything listed here is NOT bundled — consuming project supplies them.
       external: [

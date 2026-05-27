@@ -78,16 +78,42 @@ export default function App() {
 </AppLayout>
 ```
 
+## Required vite.config.js in consuming project
+
+Add `resolve.dedupe` and `server.watch` — required for all projects using aviary-ui via `file:` deps.
+
+```js
+// your-app/vite.config.js
+export default defineConfig({
+  resolve: {
+    alias: { '@': resolve(__dirname, './src') },
+    // Prevent duplicate React from symlinked file: deps — hooks crash without this.
+    dedupe: ['react', 'react-dom'],
+  },
+  server: {
+    watch: {
+      // Watch @aviary-ui dist/ for changes so HMR fires when make dev-ui rebuilds.
+      ignored: (path) => path.includes('node_modules') && !path.includes('@aviary-ui'),
+    },
+  },
+  optimizeDeps: {
+    // Don't pre-bundle aviary-ui — let Vite load dist/ fresh on each rebuild.
+    exclude: ['@aviary-ui/core', '@aviary-ui/ui'],
+  },
+});
+```
+
 ## Development (watch mode)
 
 ```bash
-# Terminal 1 — rebuild core on change
-make dev-core
+# Terminal 1 (aviary-ui repo) — watch-build package(s) being edited
+make dev-ui    # or dev-core
 
-# Terminal 2 — rebuild ui on change
-make dev-ui
+# Terminal 2 (your app) — normal dev server
+make dev
 
-# Your app's Vite dev server picks up dist/ changes automatically
+# Edit a component in aviary-ui → vite build --watch rebuilds dist/
+# → your app's Vite HMR detects dist/ change → browser reloads automatically
 ```
 
 ## Adding a new package

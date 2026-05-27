@@ -9,6 +9,7 @@ export default defineConfig({
       fileName: 'index',
       formats: ['es'],
     },
+    sourcemap: true,
     rollupOptions: {
       // @aviary-ui/core is pure JS — no external peer deps to declare.
       // Keep the bundle self-contained.
