@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "build": "npm run build -w packages/core && npm run build -w packages/ui",
     "dev:core": "npm run dev -w packages/core",
     "dev:ui": "npm run dev -w packages/ui",
-    "lint": "eslint packages/*/src",
+    "playground": "npm run dev -w apps/playground",
+    "lint": "eslint packages/*/src apps/playground/src",
     "format": "prettier --write . --ignore-path ./.prettierignore"
   },
   "devDependencies": {

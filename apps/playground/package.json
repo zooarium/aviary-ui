@@ -1,0 +1,27 @@
+{
+  "name": "@aviary-ui/playground",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@aviary-ui/core": "*",
+    "@aviary-ui/ui": "*",
+    "@radix-ui/react-alert-dialog": "^1.1.14",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@tabler/core": "^1.2.0",
+    "@tabler/icons-react": "^3.34.0",
+    "@tanstack/react-query": "^5.100.14",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.13.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "vite": "^7.2.4"
+  }
+}
