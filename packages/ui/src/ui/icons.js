@@ -16,4 +16,7 @@ export {
   IconAlertTriangle,
   IconInfoCircle,
   IconCircleX,
+  IconApps,
+  IconEye,
+  IconArrowLeft,
 } from '@tabler/icons-react';
