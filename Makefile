@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-NVM_SH := /home/hiren/.local/bin/nvm.sh
+NVM_SH := ~/.local/bin/nvm.sh
 NVM_USE := . $(NVM_SH) && nvm use
 
 .PHONY: help install build build-core build-ui dev-core dev-ui playground lint format clean
