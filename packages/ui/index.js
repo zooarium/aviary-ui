@@ -2,7 +2,7 @@
 // Import from '@aviary-ui/ui' — never from individual files inside the package.
 
 // Auth guards (React + react-router-dom)
-export { PrivateRoute, PublicRoute, RequireRole, RequirePermission } from './src/auth/guards';
+export { PrivateRoute, PublicRoute, RootRedirect, RequireRole, RequirePermission } from './src/auth/guards';
 
 // Context providers + hooks
 export { NotificationProvider, useNotification } from './src/context/NotificationContext';

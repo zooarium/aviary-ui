@@ -12,6 +12,13 @@ export function PublicRoute({ children }) {
   return !storage.getToken() ? children : <Navigate to="/dashboard" replace />;
 }
 
+// RootRedirect — landing route ("/"). Reads the token at render time (not at
+// router mount), so the target is never stale: dashboard when authenticated,
+// login otherwise. Usage: <Route path="/" element={<RootRedirect />} />
+export function RootRedirect() {
+  return <Navigate to={storage.getToken() ? '/dashboard' : '/login'} replace />;
+}
+
 // RequireRole — renders children only if user.role matches.
 // Usage: <RequireRole role="admin"><AdminPanel /></RequireRole>
 // Optional fallback: <RequireRole role="admin" fallback={<p>No access</p>}>…
