@@ -19,4 +19,8 @@ export {
   IconApps,
   IconEye,
   IconArrowLeft,
+  IconPackage,
+  IconShoppingCart,
+  IconChevronLeft,
+  IconChevronRight,
 } from '@tabler/icons-react';

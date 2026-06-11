@@ -17,6 +17,8 @@ let _config = {
   authBase: '',
   // Path on authBase that issues a new access token from a refresh token.
   refreshPath: '/users/refresh',
+  // Browser route to land on when auth is irrecoverably lost (e.g. '/admin/login').
+  loginPath: '/login',
 };
 
 export function configure(options) {
@@ -79,7 +81,7 @@ async function retryWithToken(url, options, newToken) {
   });
   if (res.status === 401) {
     clearAuth();
-    window.location.href = '/login';
+    window.location.href = _config.loginPath;
     throw new AuthError();
   }
   return parseResponse(res);
@@ -114,7 +116,7 @@ async function request(baseUrl, path, options = {}, skipAuthRefresh = false) {
       isRefreshing = false;
       drainQueue(null);
       clearAuth();
-      window.location.href = '/login';
+      window.location.href = _config.loginPath;
       throw new AuthError();
     }
   }

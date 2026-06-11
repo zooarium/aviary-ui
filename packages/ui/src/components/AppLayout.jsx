@@ -8,8 +8,16 @@ import { IconLogout, IconMenu2, IconSun, IconMoon } from '../ui/icons';
 
 // navItems: [{ path: string, label: string, Icon: ReactComponent }]
 // appName: string — shown in sidebar header
-// onLogout: optional override; default clears storage + navigates to /login
-export default function AppLayout({ children, navItems = [], appName = 'App', onLogout }) {
+// onLogout: optional override; default clears storage + navigates to loginPath
+// loginPath: where logout lands (default /login); homePath: brand click target (default /)
+export default function AppLayout({
+  children,
+  navItems = [],
+  appName = 'App',
+  onLogout,
+  loginPath = '/login',
+  homePath = '/',
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const { showNotification } = useNotification();
@@ -23,7 +31,7 @@ export default function AppLayout({ children, navItems = [], appName = 'App', on
     } else {
       storage.clear();
       showNotification('Logged out successfully.', 'success');
-      navigate('/login');
+      navigate(loginPath);
     }
   };
 
@@ -48,7 +56,7 @@ export default function AppLayout({ children, navItems = [], appName = 'App', on
           <div className="navbar-brand">
             <button
               className="btn btn-link navbar-brand p-0 text-decoration-none fw-bold"
-              onClick={() => handleNav('/')}
+              onClick={() => handleNav(homePath)}
             >
               {appName}
             </button>

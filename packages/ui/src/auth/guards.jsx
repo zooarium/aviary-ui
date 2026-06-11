@@ -2,21 +2,21 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { storage } from '@aviary-ui/core';
 
-// PrivateRoute — requires auth token. Redirects to /login if not authenticated.
-export function PrivateRoute({ children }) {
-  return storage.getToken() ? children : <Navigate to="/login" replace />;
+// PrivateRoute — requires auth token. Redirects to loginPath if not authenticated.
+export function PrivateRoute({ children, loginPath = '/login' }) {
+  return storage.getToken() ? children : <Navigate to={loginPath} replace />;
 }
 
-// PublicRoute — for login/register pages. Redirects to /dashboard if already authenticated.
-export function PublicRoute({ children }) {
-  return !storage.getToken() ? children : <Navigate to="/dashboard" replace />;
+// PublicRoute — for login/register pages. Redirects to homePath if already authenticated.
+export function PublicRoute({ children, homePath = '/dashboard' }) {
+  return !storage.getToken() ? children : <Navigate to={homePath} replace />;
 }
 
 // RootRedirect — landing route ("/"). Reads the token at render time (not at
-// router mount), so the target is never stale: dashboard when authenticated,
+// router mount), so the target is never stale: home when authenticated,
 // login otherwise. Usage: <Route path="/" element={<RootRedirect />} />
-export function RootRedirect() {
-  return <Navigate to={storage.getToken() ? '/dashboard' : '/login'} replace />;
+export function RootRedirect({ homePath = '/dashboard', loginPath = '/login' }) {
+  return <Navigate to={storage.getToken() ? homePath : loginPath} replace />;
 }
 
 // RequireRole — renders children only if user.role matches.
