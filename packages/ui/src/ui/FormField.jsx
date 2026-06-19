@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconEye, IconEyeOff } from './icons';
 
 export default function FormField({ label, htmlFor, error, children, className = '' }) {
   return (
@@ -14,12 +15,30 @@ export default function FormField({ label, htmlFor, error, children, className =
   );
 }
 
-export function Input({ error, className = '', ...props }) {
+export function Input({ error, className = '', type = 'text', ...props }) {
+  const [reveal, setReveal] = React.useState(false);
+  const cls = `form-control ${error ? 'is-invalid' : ''} ${className}`.trim();
+
+  if (type !== 'password') {
+    return <input type={type} className={cls} {...props} />;
+  }
+
   return (
-    <input
-      className={`form-control ${error ? 'is-invalid' : ''} ${className}`.trim()}
-      {...props}
-    />
+    <div className="input-group input-group-flat">
+      <input type={reveal ? 'text' : 'password'} className={cls} {...props} />
+      <span className="input-group-text p-0">
+        <button
+          type="button"
+          className="btn btn-link link-secondary px-2 border-0 shadow-none"
+          tabIndex={-1}
+          aria-label={reveal ? 'Hide password' : 'Show password'}
+          title={reveal ? 'Hide password' : 'Show password'}
+          onClick={() => setReveal((v) => !v)}
+        >
+          {reveal ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+        </button>
+      </span>
+    </div>
   );
 }
 

@@ -22,6 +22,16 @@ export { default as FormField, Input, Select } from './src/ui/FormField';
 export { default as Alert } from './src/ui/Alert';
 export { default as Modal } from './src/ui/Modal';
 export { default as ConfirmDialog } from './src/ui/ConfirmDialog';
+export { default as SafeHtml } from './src/ui/SafeHtml';
+
+// Social platform registry + helpers (shared across apps)
+export {
+  SOCIAL_PLATFORMS,
+  socialPlatform,
+  socialIcon,
+  socialLabel,
+  SocialIcon,
+} from './src/ui/social';
 
 // Icons re-export (swap icon library: edit src/ui/icons.js only)
 export * from './src/ui/icons';

@@ -3,7 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 
 const SIZE_CLASS = { sm: 'modal-sm', md: '', lg: 'modal-lg', xl: 'modal-xl' };
 
-export default function Modal({ isOpen, onClose, title, children, size = 'md' }) {
+export default function Modal({ isOpen, onClose, title, children, size = 'md', scrollable = false }) {
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => {
@@ -16,7 +16,9 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
       <Dialog.Portal>
         <Dialog.Overlay className="modal-backdrop show" style={{ opacity: 0.7 }} />
         <div className="modal show d-block" style={{ zIndex: 1060 }}>
-          <div className={`modal-dialog modal-dialog-centered ${SIZE_CLASS[size] ?? ''}`}>
+          <div
+            className={`modal-dialog modal-dialog-centered ${scrollable ? 'modal-dialog-scrollable' : ''} ${SIZE_CLASS[size] ?? ''}`.trim()}
+          >
             <Dialog.Content
               className="modal-content"
               onOpenAutoFocus={(e) => e.preventDefault()}
