@@ -3,6 +3,7 @@
 
 // Auth guards (React + react-router-dom)
 export { PrivateRoute, PublicRoute, RootRedirect, RequireRole, RequirePermission } from './src/auth/guards';
+export { ImpersonationExchange } from './src/auth/ImpersonationExchange';
 
 // Context providers + hooks
 export { NotificationProvider, useNotification } from './src/context/NotificationContext';

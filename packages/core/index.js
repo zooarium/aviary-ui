@@ -2,7 +2,15 @@
 // Pure JS utilities. No React. No framework deps.
 
 // HTTP
-export { configure, apiRequest, authRequest, clearAuth } from './src/http/client';
+export {
+  configure,
+  apiRequest,
+  authRequest,
+  clearAuth,
+  startImpersonation,
+  exchangeImpersonation,
+  logoutImpersonation,
+} from './src/http/client';
 export { NetworkError, AuthError } from './src/http/errors';
 
 // Auth storage

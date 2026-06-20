@@ -19,6 +19,10 @@ let _config = {
   refreshPath: '/users/refresh',
   // Browser route to land on when auth is irrecoverably lost (e.g. '/admin/login').
   loginPath: '/login',
+  // Browser route to land on when an IMPERSONATION session ends (expired,
+  // revoked, or exited). Returns to the admin context rather than the login
+  // screen, since the admin's own session is still valid in this/other tabs.
+  impersonationExitPath: '/',
 };
 
 export function configure(options) {
@@ -26,7 +30,27 @@ export function configure(options) {
 }
 
 export function clearAuth() {
+  // While impersonating, only tear down the per-tab overlay — never the admin's
+  // localStorage session.
+  if (storage.isImpersonating()) {
+    storage.exitImpersonation();
+    return;
+  }
   storage.clear();
+}
+
+// failAuth handles an irrecoverable 401. Under impersonation it drops the
+// overlay and returns to the admin context; otherwise it clears auth and sends
+// the user to login. Always throws AuthError.
+function failAuth() {
+  if (storage.isImpersonating()) {
+    storage.exitImpersonation();
+    window.location.href = _config.impersonationExitPath;
+  } else {
+    storage.clear();
+    window.location.href = _config.loginPath;
+  }
+  throw new AuthError();
 }
 
 // --- Refresh token state ---
@@ -80,9 +104,7 @@ async function retryWithToken(url, options, newToken) {
     headers: { ...options.headers, Authorization: `Bearer ${newToken}` },
   });
   if (res.status === 401) {
-    clearAuth();
-    window.location.href = _config.loginPath;
-    throw new AuthError();
+    failAuth();
   }
   return parseResponse(res);
 }
@@ -104,6 +126,12 @@ async function request(baseUrl, path, options = {}, skipAuthRefresh = false) {
   // A 401 from login just means bad credentials — let the error propagate normally.
   if (res.status !== 401 || skipAuthRefresh) return parseResponse(res);
 
+  // Impersonation tokens cannot be refreshed (no refresh token). A 401 means the
+  // session expired or was revoked: drop the overlay and return to admin.
+  if (storage.isImpersonating()) {
+    failAuth();
+  }
+
   // --- 401 handling: try silent refresh ---
   if (!isRefreshing) {
     isRefreshing = true;
@@ -115,9 +143,7 @@ async function request(baseUrl, path, options = {}, skipAuthRefresh = false) {
     } catch {
       isRefreshing = false;
       drainQueue(null);
-      clearAuth();
-      window.location.href = _config.loginPath;
-      throw new AuthError();
+      failAuth();
     }
   }
 
@@ -135,3 +161,38 @@ export const apiRequest = (path, options = {}) =>
 
 export const authRequest = (path, options = {}) =>
   request(_config.authBase, path, options, true);
+
+// --- Impersonation handoff ---
+// These talk to keeper's impersonation endpoints (on authBase) WITHOUT an auth
+// header: the one-time code and the opaque session id are the capabilities. They
+// bypass the normal auth/refresh machinery entirely.
+
+// startImpersonation asks keeper to mint a one-time handoff code for logging in
+// as a user on a given downstream service (audience). Targets keeper (authBase)
+// and carries the caller's admin token. Returns
+// { code, session_id, audience, expires_at }.
+export const startImpersonation = (body) =>
+  authRequest('/impersonations', { method: 'POST', body: JSON.stringify(body) });
+
+// exchangeImpersonation redeems a one-time code (typically read from the URL
+// fragment of the exchange page) for an impersonation token + user object.
+// Public, no auth header. Returns { token, user, audience, expires_at }.
+export async function exchangeImpersonation(code) {
+  const res = await fetch(`${_config.authBase}/impersonations/exchange`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ code }),
+  });
+  return parseResponse(res);
+}
+
+// logoutImpersonation revokes an impersonation session server-side by its opaque
+// id (best-effort; safe to call even if already revoked). Public, no auth.
+export async function logoutImpersonation(sessionId) {
+  const res = await fetch(`${_config.authBase}/impersonations/logout`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ session_id: sessionId }),
+  });
+  return parseResponse(res);
+}

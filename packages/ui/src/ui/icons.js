@@ -20,6 +20,7 @@ export {
   IconEye,
   IconEyeOff,
   IconArrowLeft,
+  IconLogin2,
   IconPackage,
   IconCategory,
   IconShoppingCart,
