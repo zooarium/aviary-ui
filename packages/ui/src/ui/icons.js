@@ -21,6 +21,7 @@ export {
   IconEyeOff,
   IconArrowLeft,
   IconPackage,
+  IconCategory,
   IconShoppingCart,
   IconChevronLeft,
   IconChevronRight,
