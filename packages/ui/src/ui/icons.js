@@ -26,6 +26,8 @@ export {
   IconShoppingCart,
   IconChevronLeft,
   IconChevronRight,
+  IconChevronDown,
+  IconBuildingStore,
   IconWorld,
   IconBrandFacebook,
   IconBrandX,
